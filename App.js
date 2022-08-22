@@ -23,6 +23,7 @@ const imgStyle = {
   // marginLeft: 30,
   borderWidth: 0.1, // subject to change
   borderColor: "black", // subject to change
+  marginLeft: 10,
 };
 const float = {
   flexDirection: "row",
@@ -31,32 +32,32 @@ const float = {
 };
 const rightAlign = { alignSelf: "flex-end" };
 const padding = {
-  paddingLeft: 5,
-  paddingRight: 0,
+  paddingLeft: 0,
+  paddingRight: 10,
 };
 
 // Components
-const ButtonReuse = ({ label, darkMode }) => {
+const ButtonReuse = ({ label, darkMode, onPress }) => {
   const colorScheme = useColorScheme();
 
-  const themeTextStyle =
-    colorScheme === "light" ? styles.lightThemeText : styles.darkThemeText;
-  const themeContainerStyle =
-    colorScheme === "light" ? styles.lightContainer : styles.darkContainer;
-  const themeSubContainerStyle =
-    colorScheme === "light" ? styles.lightSubContainer : styles.darkSubContainer;
-  const themeTextStyleWeb =
-    darkMode ? styles.darkThemeText : styles.lightThemeText;
-  const themeContainerStyleWeb =
-    darkMode ? styles.darkSubContainer : styles.lightSubContainer;
+  const buttonColor =
+  colorScheme === "light" ? styles.lightThemeButton.color : styles.darkThemeButton.color;
+  const buttonColorWeb =
+  darkMode === true ? styles.darkThemeButton.color : styles.lightThemeButton.color;
+
+  const buttonDark =
+  colorScheme === "light" ? true : false;
+  const buttonDarkWeb =
+  darkMode === true ? true : false;
 
   return (
     <Button
       theme={styles.button}
-      color={colorScheme === "light" ? styles.lightThemeButton.color : styles.darkThemeButton.color}
-      dark={colorScheme === "light" ? true : false}
+      color={Platform.OS === "web" ? buttonColorWeb : buttonColor}
+      dark={colorScheme === "light" ? buttonDarkWeb : buttonDark}
       mode="contained"
       uppercase={false}
+      onPress={onPress}
     >
       {label}
     </Button>
@@ -194,16 +195,16 @@ const TransactionsList = (props) => {
           return (
             <View style={float}>
               <View
-                style={{ flex: 1}}
+                style={{ flex: 0.5}}
               ></View>
               <View style={[{ flex: 1, backgroundColor: '#f0ffff' }, Platform.OS === "web" ? themeContainerStyleWeb : themeSubContainerStyle]}>
                 <Image source={item.image} style={imgStyle} />
               </View>
-              <View style={[{ flex: 3, backgroundColor: '#f0ffff' }, Platform.OS === "web" ? themeContainerStyleWeb : themeSubContainerStyle]}>
+              <View style={[{ flex: 2.3, backgroundColor: '#f0ffff' }, Platform.OS === "web" ? themeContainerStyleWeb : themeSubContainerStyle]}>
                 <Text style={[padding, styles.bold, Platform.OS === "web" ? themeTextStyleWeb : themeTextStyle]}>{item.type}</Text>
                 <Text style={[padding, Platform.OS === "web" ? themeTextStyleWeb : themeTextStyle]}>{item.detail}</Text>
               </View>
-              <View style={[{ flex: 2, backgroundColor: '#f0ffff' }, Platform.OS === "web" ? themeContainerStyleWeb : themeSubContainerStyle]}>
+              <View style={[{ flex: 1, backgroundColor: '#f0ffff' }, Platform.OS === "web" ? themeContainerStyleWeb : themeSubContainerStyle]}>
                 <Text style={[padding, rightAlign, Platform.OS === "web" ? themeTextStyleWeb : themeTextStyle]}>- ${item.amount}</Text>
                 <Text style={[padding, rightAlign, Platform.OS === "web" ? themeTextStyleWeb : themeTextStyle]}>
                   <Icon
@@ -214,12 +215,12 @@ const TransactionsList = (props) => {
                 </Text>
               </View>
               <View
-                style={{ flex: 1}}
+                style={{ flex: 0.5}}
               ></View>
             </View>
           );
         }}
-        contentContainerStyle={{ paddingBottom: 350 }}
+        contentContainerStyle={{ paddingBottom: 250 }}
       />
     </View>
   );
@@ -264,7 +265,7 @@ const TransactionHistory = () => {
   }} />
 
   return (
-    <View style={Platform.OS === "web" ? themeContainerStyleWeb : themeContainerStyle}>
+    <View style={[{ flex: 1 }, Platform.OS === "web" ? themeContainerStyleWeb : themeContainerStyle]}>
       <View>
         <Appbar.Header>
           <Appbar.BackAction
@@ -272,17 +273,17 @@ const TransactionHistory = () => {
               alert("You love Saki Tenma!");
             }}
           />
-          <Appbar.Content title="Transaction History" />
+          <Appbar.Content title="Transaction History" style={{alignItems: 'center'}} />
           {Platform.OS === "web" ? toggler : <Text></Text>}
           <Appbar.Action icon="dots-vertical" />
         </Appbar.Header>
       </View>
       <View style={styles.view}>
         <View style={styles.buttonContainer}>
-          <ButtonReuse label="Spend Money" darkMode={darkMode} />
+          <ButtonReuse label="Spend Money" darkMode={darkMode} onPress={() => {alert('Spend Money Pressed')}} />
         </View>
         <View>
-          <ButtonReuse label="Received Fund" darkMode={darkMode} />
+          <ButtonReuse label="Received Fund" darkMode={darkMode} onPress={() => {alert('Received Fund Pressed')}} />
         </View>
       </View>
       <TransactionsList image={images} darkMode={darkMode} />
@@ -347,59 +348,3 @@ const styles = StyleSheet.create({
 });
 
 export default TransactionHistory;
-
-// Scratch
-/* <Item
-image={require("./billdetailsimages/saki1.jpg")}
-type="Taxi to NY"
-detail="Transport"
-amount="200.00"
-/>
-<Item
-image={require("./billdetailsimages/saki1.jpg")}
-type="Monthly Rent"
-detail="Housing"
-amount="200.00"
-/>
-<Item
-image={require("./billdetailsimages/saki1.jpg")}
-type="Bill Restaurant"
-detail="Fun Life"
-amount="200.00"
-/>
-<Item
-image={require("./billdetailsimages/saki1.jpg")}
-type="Flight Ticket"
-detail="Travel"
-amount="200.00"
-/>
-<Item
-image={require("./billdetailsimages/saki1.jpg")}
-type="Water Bill"
-detail="Utility Bill"
-amount="200.00"
-/>
-<Item
-image={require("./billdetailsimages/saki1.jpg")}
-type="Internet Bill"
-detail="Utility Bill"
-amount="200.00"
-/>
-<Item
-image={require("./billdetailsimages/saki1.jpg")}
-type="Interla Mala"
-detail="AC 62502532025320"
-amount="200.00"
-/>
-<Item
-image={require("./billdetailsimages/saki1.jpg")}
-type="Taxi to NY"
-detail="Transport"
-amount="200.00"
-/>
-<Item
-image={require("./billdetailsimages/saki1.jpg")}
-type="Taxi to NY"
-detail="Transport"
-amount="200.00"
-/> */
