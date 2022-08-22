@@ -54,8 +54,8 @@ const textValue = {
   paddingBottom: 20,
 };
 const reimbursementImg = {
-  width: 58, // this is the size that properly fits in the white bg
-  height: 57, // this is the size that properly fits in the white bg
+  width: Platform.OS === 'web' ? 57 : 68, // this is the size that properly fits in the white bg
+  height: Platform.OS === 'web' ? 57 : 68, // this is the size that properly fits in the white bg
   borderRadius: 150 / 2,
   overflow: "hidden",
   borderWidth: 0.1, // subject to change
@@ -66,10 +66,6 @@ const reimbursementImg = {
 let darkScreen = false;
 
 // Components
-const Title = ({ title }) => {
-  return <Text style={bold}>{title}</Text>;
-};
-
 const Reimbursement = (props) => {
   const colorScheme = useColorScheme();
 
@@ -175,7 +171,7 @@ const ReimbursementDetails = (props) => {
   );
 };
 
-const Screen = () => {
+const BillDetails = () => {
   // For LIGHT MODE and DARK MODE
   const colorScheme = useColorScheme();
 
@@ -187,6 +183,11 @@ const Screen = () => {
   const themeContainerStyleWeb =
     darkMode ? styles.darkContainer : styles.lightContainer;
 
+  // WEB-ONLY ICON
+  const toggler = <Appbar.Action icon={darkMode ? 'toggle-switch' : 'toggle-switch-off'} onPress={() => {
+    setDarkMode(!darkMode);
+  }} />
+
   return (
     <View style={[screenFlex, Platform.OS === "web" ? themeContainerStyleWeb : themeContainerStyle]}>
       <View>
@@ -196,10 +197,8 @@ const Screen = () => {
               alert("You love Saki Tenma!");
             }}
           />
-          <Appbar.Content style={text} title="Bill Details" />
-          <Appbar.Action icon={darkMode ? 'toggle-switch' : 'toggle-switch-off'} onPress={() => {
-              setDarkMode(!darkMode);
-            }} />
+          <Appbar.Content title="Bill Details" style={{alignItems: 'center'}} />
+          {Platform.OS === "web" ? toggler : <Text></Text>}
           <Appbar.Action icon="dots-vertical" />
         </Appbar.Header>
       </View>
@@ -255,43 +254,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Screen;
-// import React from 'react';
-// import { Text, StyleSheet, View, useColorScheme } from 'react-native';
-// import { StatusBar } from 'expo-status-bar'; // automatically switches bar style based on theme!
-
-// export default function App() {
-//   const colorScheme = useColorScheme();
-
-//   const themeTextStyle = colorScheme === 'light' ? styles.lightThemeText : styles.darkThemeText;
-//   const themeContainerStyle =
-//     colorScheme === 'light' ? styles.lightContainer : styles.darkContainer;
-
-//   return (
-//     <View style={[styles.container, themeContainerStyle]}>
-//       <Text style={[styles.text, themeTextStyle]}>Color scheme: {colorScheme}</Text>
-//       <Text> {colorScheme} </Text>
-//       <StatusBar />
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-//   lightContainer: {
-//     backgroundColor: '#d0d0c0',
-//   },
-//   darkContainer: {
-//     backgroundColor: '#242c40',
-//   },
-//   lightThemeText: {
-//     color: '#242c40',
-//   },
-//   darkThemeText: {
-//     color: '#d0d0c0',
-//   },
-// });
+export default BillDetails;
